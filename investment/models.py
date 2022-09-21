@@ -8,7 +8,7 @@ class Bank(models.Model):
     """
         증권사 오브젝트        
     """
-    name = models.CharField("증권사명", max_length=128)
+    name = models.CharField("증권사명", max_length=128, unique=True)
 
     def __str__(self):
         return f"{self.id} - {self.name}"
@@ -27,8 +27,8 @@ class Investment(models.Model):
     account_name = models.CharField("계좌명", max_length=128)
     account_num = models.CharField("계좌번호", max_length=13, validators=[account_num_validator],  unique=True)
 
-    starting_fund = models.PositiveBigIntegerField("투자원금")
-    total_asset = models.PositiveBigIntegerField("계좌총자산")
+    starting_fund = models.PositiveBigIntegerField("투자원금", default=0)
+    total_asset = models.PositiveBigIntegerField("계좌총자산", default=0)
 
     def __str__(self):
         return f"{self.id} - {self.user.username}'s investment"

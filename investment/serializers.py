@@ -24,6 +24,8 @@ class InvestmentModelSerializer(serializers.ModelSerializer):
         model = InvestmentModel
         fields = "__all__"
 
+        read_only_fields = ["starting_fund", "total_asset"]
+
 class StockModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockModel
