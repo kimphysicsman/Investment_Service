@@ -1,17 +1,21 @@
 import pandas as pd
 import os
 
-from user.services.batch_service import get_user
+from django.db import transaction
 
+from user.services.batch_service import get_user
 from investment.services.batch_service import (
     set_stock,
     get_investment,
-    set_investment_stock
+    set_investment_stock,
+    get_investment_simple,
+    get_investment_stocks,
 )
 
 BASE_PATH = os.getcwd()
 DATA_PATH = BASE_PATH + '\investment\scheduler\data'
 
+@transaction.atomic
 def set_aaset_group_info():
     """자산그룹 및 종목 정보 셋팅 함수 
     """
@@ -25,6 +29,8 @@ def set_aaset_group_info():
         except:
             continue
 
+
+@transaction.atomic
 def set_investment_info():
     """투자 정보 셋팅 함수
     """
@@ -77,3 +83,35 @@ def set_investment_info():
                     set_investment_stock(investment_obj, stock_obj, current_price, order)
                 except:
                     continue
+
+    set_investment_asset()
+
+
+@transaction.atomic
+def set_investment_asset():
+    """
+        투자별 투자원금, 계좌총자산 세팅 함수
+    """
+
+    data_path = DATA_PATH + "\\account_basic_info_set.xlsx"
+    df = pd.read_excel(data_path)
+
+    for investment_info in df.iloc:
+        account_num = int(investment_info["계좌번호"])
+        starting_fund = int(investment_info["투자원금"])
+        print(account_num, starting_fund)
+
+        try:
+            investment_obj = get_investment_simple(str(account_num))
+        except:
+            continue
+
+        investment_obj.starting_fund = starting_fund
+
+        investment_stock_obj_list = get_investment_stocks(investment_obj)
+
+        for investment_stock_obj in investment_stock_obj_list:
+            investment_obj.total_asset += investment_stock_obj.order * investment_stock_obj.current_price
+        
+        investment_obj.total_asset += starting_fund
+        investment_obj.save()
