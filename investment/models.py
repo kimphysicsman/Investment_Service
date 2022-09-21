@@ -72,12 +72,3 @@ class InvestmentStock(models.Model):
     current_price = models.PositiveIntegerField("현재가")
 
 
-
-class Deposit(models.Model):
-    """
-        투자금 입금 내역
-    """
-    user = models.ForeignKey(UserModel, verbose_name="고객", on_delete=models.CASCADE)
-    investment = models.ForeignKey(Investment, verbose_name="투자", on_delete=models.CASCADE)
-
-    transfer_amount = models.PositiveBigIntegerField("거래금액")

@@ -38,6 +38,10 @@ class InvestmentStockModelSerializer(serializers.ModelSerializer):
 
 
 class InvestmentDtailViewSerializer(serializers.ModelSerializer):
+    """
+        투자 상세 조회 Serializer
+    """
+
     bank = serializers.SerializerMethodField()
     total_income = serializers.SerializerMethodField()
     income_percent = serializers.SerializerMethodField()
@@ -63,6 +67,9 @@ class InvestmentDtailViewSerializer(serializers.ModelSerializer):
 
         
 class InvestmentViewSerializer(InvestmentDtailViewSerializer):
+    """
+        투자 조회 Serializer
+    """
 
     class Meta:
         model = InvestmentModel
@@ -72,6 +79,9 @@ class InvestmentViewSerializer(InvestmentDtailViewSerializer):
         ]
 
 class InvestmentStockViewSerializer(InvestmentDtailViewSerializer):
+    """
+        보유 종목 조회 Serializer
+    """
     stock = serializers.SerializerMethodField()
     asset_group = serializers.SerializerMethodField()
     assessment_value = serializers.SerializerMethodField()
