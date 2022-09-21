@@ -98,13 +98,28 @@
 
 ### 1. Batch
 
-> 제공되는 데이터셋을 매일 최신 데이터로 갱신할 수 있어야함 오류 데이터 구분해야 함
+> `apscheduler`/`django-apscheduler`를 이용한 매일 0시 Bacth 함수 실행  
+> [대표 코드 보기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/investment/scheduler/updater.py#L1)  
+>
+> `pandas.read_excel`를 이용한 데이터셋 업데이트  
+> [대표 코드 보기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/investment/scheduler/functions.py#L19)  
 
 ### 2. 적절한 오류/예외 처리
 
+> `service` / `view` layer구분으로 에러 핸들링 통일성 유지  
+> `try/except` / `status`를 이용한 에러 핸들링  
+> [대표 코드 보기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/deposit/views.py#L20)
+
 ### 3. 원본 데이터와 응답 값에 일관성(Consistency) 이 유지
 
-> 투자금 입금 기능에서 고객의 총 자산을 업데이트할 때 일관성이 유지되도록 구현해야함
+> `transaction.atomic`을 이용한 Bacth와 투자금입금 적용 함수에 transaction 보장  
+> [대표 코드 보기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/deposit/views.py#L65)
+
+### 4. 투자금입금 정보 해시화
+
+> `make_password` / `check_password`를 이용하여 간단하게 해쉬/검증
+> [대표 코드 보러가기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/deposit/services/deposit_service.py#L73)
+
 
 <br />
 
@@ -177,13 +192,13 @@
 
 ## 👉 ERD
 
-> <img width="600" src="https://velog.velcdn.com/images/kimphysicsman/post/2a6614d3-79f3-45d5-9c26-ac8893b7343f/image.png" />
+> <img width="600" src="https://user-images.githubusercontent.com/68724828/191544952-9ecbbe52-6c3b-4ed5-b229-d16211d9a6ed.png" />
 
 <br />
 
 ## 🙏 API 문서
 
-> ![](https://velog.velcdn.com/images/kimphysicsman/post/06c05135-4412-4e0e-9817-37be205b7e6b/image.png)
+> ![](https://user-images.githubusercontent.com/68724828/191545068-1d5c2dd4-5cd4-4896-b159-2e53dd0ad5f0.png)
 >
 > ### [상세보기](https://www.notion.so/kimphysicsman/664b9f1e8c0c41c792e801f80ced948f?v=84e97738b1ac49ac82bef79aacd1615b)
 
