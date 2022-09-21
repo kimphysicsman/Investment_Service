@@ -64,9 +64,33 @@ class InvestmentDtailViewSerializer(serializers.ModelSerializer):
         
 class InvestmentViewSerializer(InvestmentDtailViewSerializer):
 
-       class Meta:
+    class Meta:
         model = InvestmentModel
         fields = [
             "id", "account_name", "bank", "account_num", 
             "total_asset"
+        ]
+
+class InvestmentStockViewSerializer(InvestmentDtailViewSerializer):
+    stock = serializers.SerializerMethodField()
+    asset_group = serializers.SerializerMethodField()
+    assessment_value = serializers.SerializerMethodField()
+    isin = serializers.SerializerMethodField()
+
+    def get_stock(self, obj):
+        return obj.stock.name
+
+    def get_asset_group(self, obj):
+        return obj.stock.asset_group.name
+
+    def get_assessment_value(self, obj):
+        return obj.order * obj.current_price
+
+    def get_isin(self, obj):
+        return obj.stock.isin
+
+    class Meta:
+        model = InvestmentStockModel
+        fields = [
+            "id", "stock", "asset_group", "assessment_value", "isin"
         ]
