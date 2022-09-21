@@ -117,13 +117,13 @@
 
 ### 4. 투자금입금 정보 해시화
 
-> `make_password` / `check_password`를 이용하여 간단하게 해쉬/검증
+> `make_password` / `check_password`를 이용하여 간단하게 해쉬/검증  
 > [대표 코드 보러가기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/deposit/services/deposit_service.py#L73)
 
 
 <br />
 
-## ✏ 주요 기능
+## ✏ 주요 기능 ()
 
 ### 1. 고객 관리
 
