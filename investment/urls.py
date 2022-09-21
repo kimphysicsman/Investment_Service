@@ -1,11 +1,12 @@
 from django.urls import path, include
 
 from investment.views import (
-    InvestmentView
+    InvestmentView,
+    InvestmentDetailView,
 )
 
 # /investments
 urlpatterns = [
-    path('', InvestmentView.as_view())
-
+    path('', InvestmentView.as_view()),
+    path('/<int:id>', InvestmentDetailView.as_view())
 ]
