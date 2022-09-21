@@ -1,9 +1,9 @@
 import pandas as pd
 import os
 
-from user.services.model_service import get_user
+from user.services.batch_service import get_user
 
-from investment.services.model_service import (
+from investment.services.batch_service import (
     set_stock,
     get_investment,
     set_investment_stock
