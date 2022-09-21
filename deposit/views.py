@@ -15,6 +15,8 @@ from deposit.services.deposit_service import (
     fail_deposit,
 )
 
+from investment.services.batch_service import get_investment_simple
+
 # 투자금 입금 View
 class DepositView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -30,15 +32,33 @@ class DepositView(APIView):
         user_name = request.data.get("user_name", None)
         transfer_amount = request.data.get("transfer_amount", None)
 
-        deposit_obj = create_deposit(user, account_number, transfer_amount)
+        if user.username != user_name:
+            return Response({"detail": "입력 데이터를 확인해주세요."}, status=status.HTTP_400_BAD_REQUEST)
 
-        deposit_str = get_deposit_str(deposit_obj)
-        deposit_hashed = get_deposit_hashed(deposit_str)
+        try:
+            investment_obj = get_investment_simple(account_number)
+        except:
+            return Response({"detail": "투자(계좌)를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({
-            "transfer_identifier": deposit_obj.id,
-            "hashed_data" : deposit_hashed
-        }, status=status.HTTP_200_OK)
+        if user != investment_obj.user:
+            return Response({"detail": "입력 데이터를 확인해주세요."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            deposit_obj = create_deposit(user, account_number, transfer_amount)
+        except:
+            return Response({"detail": "입력 데이터를 확인해주세요."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        # # 응답 데이터에 hash된 값 포함 시 사용
+        # deposit_str = get_deposit_str(deposit_obj)
+        # deposit_hashed = get_deposit_hashed(deposit_str)
+
+        # return Response({
+        #     "transfer_identifier": deposit_obj.id,
+        #     "hashed_data" : deposit_hashed
+        # }, status=status.HTTP_200_OK)
+
+        return Response({ "transfer_identifier": deposit_obj.id }, status=status.HTTP_200_OK)
 
     
     # 투자금 입금 검증
@@ -51,12 +71,15 @@ class DepositView(APIView):
         deposit_id = request.data.get("transfer_identifier", None)
 
         if deposit_id:
-            deposit_obj = get_deposit(deposit_id)
+            try:
+                deposit_obj = get_deposit(deposit_id)
+            except:
+                return Response({"detail": "입금 내역을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
         else :
-            return Response({"detail": "입금 내역을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "입금 내역 식별자를 입력해주세요."}, status=status.HTTP_400_BAD_REQUEST)
 
         if deposit_obj.status != "validate":
-            return Response({"detail": "입금 내역 수정할 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "입금 내역 수정할 수 없습니다."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         hashed_data = request.data.get("signature", None)
 

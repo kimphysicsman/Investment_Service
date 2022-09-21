@@ -38,9 +38,9 @@ class InvestmentDetailView(APIView):
         if not user.is_authenticated:
             return Response({"detail": "서비스를 이용하기 위해 로그인 해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
 
-        investments_info =  get_investment_detail(id)
-
-        if len(investments_info) == 0:
+        try:
+            investments_info =  get_investment_detail(id)
+        except:
             return Response({"detail": "투자(계좌)가 존재하지않습니다. "}, status=status.HTTP_404_NOT_FOUND)
 
         return Response(investments_info, status=status.HTTP_200_OK)

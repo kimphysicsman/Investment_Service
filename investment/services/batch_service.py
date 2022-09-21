@@ -115,8 +115,6 @@ def set_stock(isin, name=None, asset_group_name=None):
     Returns:
         StockModel: 종목 오브젝트
     """
-
-    print(isin, name, asset_group_name)
     try:
         stock_obj = StockModel.objects.get(isin=isin)
     except:
@@ -133,6 +131,15 @@ def set_stock(isin, name=None, asset_group_name=None):
 
 
 def create_bank(name):
+    """증권사 오브젝트 생성 함수
+
+    Args:
+        name (str): 증권사명
+
+    Returns:
+        BankModel: 생성된 증권사 오브젝트
+    """
+
     data = {
         "name": name
     }
@@ -145,6 +152,15 @@ def create_bank(name):
 
 
 def get_bank(name):
+    """증권사 오브젝트 반환 함수
+       DB에 없을 시 오브젝트 생성
+
+    Args:
+        name (str): 증권사 명
+
+    Returns:
+        BankModel: 증권사 오브젝트
+    """
     try:
         bank_obj = BankModel.objects.get(name=name)
     except:
@@ -154,6 +170,18 @@ def get_bank(name):
 
 
 def create_investment(user_obj, account_name, account_num, bank_name):
+    """투자(계좌) 오브젝트 생성 함수
+
+    Args:
+        user_obj (UserModel): 고객 오브젝트
+        account_name (str): 계좌명
+        account_num (str): 계좌번호
+        bank_name (str): 증권사명
+
+    Returns:
+        InvestmentModel: 생성된 투자(계좌) 오브젝트
+    """
+
     bank_obj = get_bank(bank_name)
 
     data = {
@@ -171,6 +199,18 @@ def create_investment(user_obj, account_name, account_num, bank_name):
 
 
 def get_investment(user_obj, account_name, account_num, bank_name):
+    """투자(계좌) 오브젝트 반환 함수
+
+    Args:
+        user_obj (UserModel): 고객 오브젝트
+        account_name (str): 계좌명
+        account_num (str): 계좌번호
+        bank_name (str): 증권사명
+
+    Returns:
+        InvestmentModel: 투자(계좌) 오브젝트
+    """
+
     try:
         investment_obj = InvestmentModel.objects.get(account_num=account_num)
     except:
@@ -182,7 +222,34 @@ def get_investment(user_obj, account_name, account_num, bank_name):
     return investment_obj
 
 
+def get_investment_simple(account_num):
+    """계좌번호로 투자(계좌) 오브젝트 반환 함수
+
+    Args:
+        account_num (str): 계좌번호
+
+    Returns:
+        InvestmentModel: 투자(계좌) 오브젝트
+    """
+
+    investment_obj = InvestmentModel.objects.get(account_num=account_num)
+
+    return investment_obj
+
+
 def create_investment_stock(investment_obj, stock_obj, current_price, order):
+    """투자(계좌) - 종목 오브젝트 생성 함수
+
+    Args:
+        investment_obj (InvestmentModel): 투자(계좌) 오브젝트
+        stock_obj (StockModel): 종목 오브젝트
+        current_price (int): 현재가
+        order (int): 보유수량
+
+    Returns:
+        InvestmentStockModel: 생성된 투자(계좌) - 종목 오브젝트 
+    """
+
     data = {
         "investment": investment_obj.id,
         "stock": stock_obj.id,
@@ -198,6 +265,16 @@ def create_investment_stock(investment_obj, stock_obj, current_price, order):
 
 
 def update_investment_stock(investment_stock_obj, update_info):
+    """투자(계좌) - 종목 오브젝트 수정 함수
+
+    Args:
+        investment_stock_obj (InvestmentStockModel): 투자(계좌) - 종목 오브젝트
+        update_info (dict): 수정 정보
+
+    Returns:
+        InvestmentStockModel: 수정한 투자(계좌) - 종목 오브젝트 
+    """
+
     serializer = InvestmentStockModelSerializer(investment_stock_obj, data=update_info, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -206,6 +283,19 @@ def update_investment_stock(investment_stock_obj, update_info):
 
 
 def set_investment_stock(investment_obj, stock_obj, current_price, order):
+    """투자(계좌) - 종목 오브젝트 셋팅 함수
+       DB에 없을시 오브젝트 생성
+
+    Args:
+        investment_obj (InvestmentModel): 투자(계좌) 오브젝트
+        stock_obj (StockModel): 종목 오브젝트
+        current_price (int): 현재가
+        order (int): 보유수량
+
+    Returns:
+        InvestmentStockModel: 투자(계좌) - 종목 오브젝트 
+    """
+
     try:
         investment_stock_obj = InvestmentStockModel.objects.get(investment=investment_obj, stock=stock_obj)
     except:
@@ -220,3 +310,16 @@ def set_investment_stock(investment_obj, stock_obj, current_price, order):
         return update_investment_stock(investment_stock_obj, update_info)
 
     return investment_stock_obj
+
+
+def get_investment_stocks(investment_obj):
+    """투자(계좌) - 종목 오브젝트 리스트 반환 함수
+
+    Args:
+        investment_obj (InvestmentModel): 투자(계좌) 오브젝트
+
+    Returns:
+        list: 투자(계좌) - 종목 오브젝트 리스트
+    """
+    investment_stock_obj_list = InvestmentStockModel.objects.filter(investment=investment_obj)
+    return investment_stock_obj_list
