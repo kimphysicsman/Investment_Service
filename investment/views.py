@@ -63,3 +63,4 @@ class StockView(APIView):
             return Response({"detail": "보유 종목이 존재하지않습니다. "}, status=status.HTTP_404_NOT_FOUND)
 
         return Response(stocks_info, status=status.HTTP_200_OK)
+

@@ -62,8 +62,22 @@ class Stock(models.Model):
 
 
 class InvestmentStock(models.Model):
+    """
+        투자 - 보유종목 ManyToMany 관계 테이블
+    """
     investment = models.ForeignKey(Investment, verbose_name="투자", on_delete=models.CASCADE)
     stock = models.ForeignKey(Stock, verbose_name="보유종목", on_delete=models.CASCADE)
 
     order = models.PositiveIntegerField("보유수량")
     current_price = models.PositiveIntegerField("현재가")
+
+
+
+class Deposit(models.Model):
+    """
+        투자금 입금 내역
+    """
+    user = models.ForeignKey(UserModel, verbose_name="고객", on_delete=models.CASCADE)
+    investment = models.ForeignKey(Investment, verbose_name="투자", on_delete=models.CASCADE)
+
+    transfer_amount = models.PositiveBigIntegerField("거래금액")
