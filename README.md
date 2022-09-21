@@ -118,12 +118,12 @@
 ### 4. 투자금입금 정보 해시화
 
 > `make_password` / `check_password`를 이용하여 간단하게 해쉬/검증  
-> [대표 코드 보러가기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/deposit/services/deposit_service.py#L73)
+> [대표 코드 보기](https://github.com/kimphysicsman/Investment_Service/blob/2e008ce032a659aa008f2412ee41c36559041ef8/deposit/services/deposit_service.py#L73)
 
 
 <br />
 
-## ✏ 주요 기능 ()
+## ✏ 주요 기능
 
 ### 1. 고객 관리
 
@@ -192,7 +192,7 @@
 
 ## 👉 ERD
 
-> <img width="600" src="https://user-images.githubusercontent.com/68724828/191544952-9ecbbe52-6c3b-4ed5-b229-d16211d9a6ed.png" />
+> <img width="600" src="https://user-images.githubusercontent.com/68724828/191554696-83fbcb3b-1930-42f9-93d1-0002bc59b7ea.png" />
 
 <br />
 
